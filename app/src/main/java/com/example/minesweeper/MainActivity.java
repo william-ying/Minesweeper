@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean win = false;
     private boolean timerRunning = false;
     private int seconds = 0;
-    private ArrayList<TextView> cell_tvs;
     private Cell[][] board;
     private int revealed = 0;
     private int flagsPlaced = 0;
@@ -72,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         board = new Cell[10][10];
-        cell_tvs = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 board[i][j] = new Cell();
@@ -121,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
                 params.setMargins(gap, gap, gap, gap);
 
                 gameGrid.addView(cell, params);
-                cell_tvs.add(cell);
                 final int row = i / 10;
                 final int col = i % 10;
                 cell.setOnClickListener(view -> {
