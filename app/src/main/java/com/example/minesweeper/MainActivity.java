@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("TIME", seconds);
                 startActivity(intent);
                 finish();
-            }, 2000); // 2 second delay
+            }, 1000); // 1 second delay
         }
 
         Cell cell = board[r][c];
