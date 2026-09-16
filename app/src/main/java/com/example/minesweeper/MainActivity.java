@@ -18,23 +18,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        GridLayout gameGrid = findViewById(R.id.gameGrid);
+        ViewCompat.setOnApplyWindowInsetsListener(gameGrid, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        GridLayout gridLayout = findViewById(R.id.gridLayout);
-        for (int i = 0; i < 100; i++) {
-            Button button = new Button(this);
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams(
-                    GridLayout.spec(GridLayout.UNDEFINED, 1f),
-                    GridLayout.spec(GridLayout.UNDEFINED, 1f)
-            );
-            params.width = 0;
-            params.height = 0;
-            button.setLayoutParams(params);
-            gridLayout.addView(button);
-        }
+        gameGrid.post(() -> {
+            int gridWidth = gameGrid.getWidth();
+            int padding = gameGrid.getPaddingLeft() + gameGrid.getPaddingRight();
+            int availableWidth = gridWidth - padding;
+
+            int gap = 2;
+            int cellSize = (availableWidth - (gap * 2 * 10)) / 10;
+
+            for (int i = 0; i < 100; i++) {
+                Button cell = (Button) getLayoutInflater()
+                        .inflate(R.layout.minesweeper_tile, gameGrid, false);
+
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                params.width = cellSize;
+                params.height = cellSize;
+                params.setMargins(gap, gap, gap, gap);
+
+                gameGrid.addView(cell, params);
+            }
+        });
     }
 }
