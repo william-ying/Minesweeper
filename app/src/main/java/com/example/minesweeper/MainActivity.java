@@ -122,17 +122,29 @@ public class MainActivity extends AppCompatActivity {
                 final int row = i / 10;
                 final int col = i % 10;
                 cell.setOnClickListener(view -> {
-                    if (!timerRunning && !gameOver) {
+                    if (gameOver) {
+                        goToResultPage();
+                        return;
+                    }
+                    if (!timerRunning) {
                         timerRunning = true;
                     }
                     if (!isFlagMode) {
-                        revealCell(row, col, cell);
+                        if (!board[row][col].isRevealed) revealCell(row, col, cell);
                     } else {
                         flagCell(row, col, cell);
                     }
                 });
             }
         });
+    }
+
+    private void goToResultPage() {
+        Intent intent = new Intent(MainActivity.this, ResultPage.class);
+        intent.putExtra("WIN", win);
+        intent.putExtra("TIME", seconds);
+        startActivity(intent);
+        finish();
     }
 
     private void runTimer() {
@@ -153,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void flagCell(int r, int c, Button b) {
         if (gameOver) return;
+
         Cell cell = board[r][c];
         if (cell.isRevealed) return;
 
@@ -174,22 +187,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void revealCell(int r, int c, Button b) {
-        if (gameOver) {
-            new Handler().postDelayed(() -> {
-                Intent intent = new Intent(MainActivity.this, ResultPage.class);
-                intent.putExtra("WIN", win);
-                intent.putExtra("TIME", seconds);
-                startActivity(intent);
-                finish();
-            }, 1000); // 1 second delay
-        }
+        if (gameOver) return;
 
         Cell cell = board[r][c];
         if (cell.isRevealed || cell.isFlagged) return;
 
         cell.isRevealed = true;
         revealed++;
-        b.setEnabled(false);
         b.setBackgroundColor(Color.LTGRAY); // Changed to LTGRAY for better contrast
 
         if (cell.isMine) {
