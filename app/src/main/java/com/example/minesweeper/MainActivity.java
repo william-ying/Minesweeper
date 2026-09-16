@@ -3,6 +3,7 @@ package com.example.minesweeper;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -199,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+            goToResultPage();
             return;
         }
 
@@ -217,6 +219,17 @@ public class MainActivity extends AppCompatActivity {
         if (revealed == (100 - NUM_MINES)) {
             gameOver = true;
             win = true;
+            goToResultPage();
         }
+    }
+
+    private void goToResultPage() {
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(MainActivity.this, ResultPage.class);
+            intent.putExtra("WIN", win);
+            intent.putExtra("TIME", seconds);
+            startActivity(intent);
+            finish();
+        }, 2000); // 2 second delay
     }
 }
